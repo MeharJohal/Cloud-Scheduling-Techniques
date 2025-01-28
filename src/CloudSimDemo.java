@@ -15,6 +15,8 @@ import Algorithms.FCFSAlgorithm;
 import Algorithms.GeneticAlgorithm;
 import Algorithms.RoundRobinAlgorithm;
 import Algorithms.SJFAlgorithm;
+import Algorithms.MinMinAlgorithm;
+import Algorithms.MaxMinAlgorithm;
 
 public class CloudSimDemo {
     public static void main(String[] args) {
@@ -85,6 +87,14 @@ public class CloudSimDemo {
                     SJFAlgorithm sjfAlgo = new SJFAlgorithm();
                     sjfAlgo.runAlgorithm(broker, vmList, cloudletList);
                     break;
+                case "minmin":
+                	MinMinAlgorithm minminAlgo = new MinMinAlgorithm();
+                	minminAlgo.runAlgorithm(broker, vmList, cloudletList);
+                	break;
+                case "maxmin":
+                	MaxMinAlgorithm maxminAlgo = new MaxMinAlgorithm();
+                	maxminAlgo.runAlgorithm(broker, vmList, cloudletList);
+                	break;
                 default:
                     Log.printLine("Invalid algorithm selection");
                     return;
