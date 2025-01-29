@@ -10,13 +10,17 @@ import org.cloudbus.cloudsim.provisioners.BwProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.PeProvisionerSimple;
 import org.cloudbus.cloudsim.provisioners.RamProvisionerSimple;
 
-import Algorithms.ACOAlgorithm;
-import Algorithms.FCFSAlgorithm;
-import Algorithms.GeneticAlgorithm;
-import Algorithms.RoundRobinAlgorithm;
-import Algorithms.SJFAlgorithm;
-import Algorithms.MinMinAlgorithm;
-import Algorithms.MaxMinAlgorithm;
+//import Algorithms.ACOAlgorithm;
+//import Algorithms.FCFSAlgorithm;
+//import Algorithms.GeneticAlgorithm;
+//import Algorithms.RoundRobinAlgorithm;
+//import Algorithms.SJFAlgorithm;
+//import Algorithms.MinMinAlgorithm;
+//import Algorithms.MaxMinAlgorithm;
+//import Algorithms.GWOAlgorithm;
+//import Algorithms.WhaleOptimizationAlgorithm;
+//import Algorithms.CuckooSearchAlgorithm;
+import Algorithms.*;
 
 public class CloudSimDemo {
     public static void main(String[] args) {
@@ -45,28 +49,11 @@ public class CloudSimDemo {
             // submit cloudlet list to the broker
             broker.submitCloudletList(cloudletList);
 
-            // Apply Genetic Algorithm for Scheduling Cloudlets to VMs
-            // List<Integer> gaSchedule = runGeneticAlgorithm(vmList.size(), cloudletList.size());
-            // List<Integer> gaSchedule = runRoundRobinAlgorithm(vmList.size(), cloudletList.size());
-            // List<Integer> gaSchedule = runFirstComeFirstServeAlgorithm(vmList.size(), cloudletList.size());
-            // List<Integer> gaSchedule = runSJFAlgorithm(vmList, cloudletList);
-
-            // Assign Cloudlets to VMs based on GA output
-            // for (int i = 0; i < cloudletList.size(); i++) {
-            //     if (i < cloudletList.size() && gaSchedule.get(i) < vmList.size()) {
-            //         Vm vm = vmList.get(gaSchedule.get(i));
-            //         Cloudlet cloudlet = cloudletList.get(i);
-            //         broker.bindCloudletToVm(cloudlet.getCloudletId(), vm.getId());
-            //     } else {
-            //         System.out.println("Invalid Cloudlet or VM index: " + i);
-            //     }
-            // }
 
             Scanner sc = new Scanner(System.in);
             System.out.println("Enter the algorithm to be used: (roundrobin, fcfs, ant, genetic, sjf): ");
             String algorithm = sc.next();
             switch (algorithm.toLowerCase()) {
-                // case "genetic":
                 case "roundrobin":
                     RoundRobinAlgorithm rrAlgo = new RoundRobinAlgorithm();
                     rrAlgo.runAlgorithm(broker, vmList, cloudletList);
@@ -94,6 +81,26 @@ public class CloudSimDemo {
                 case "maxmin":
                 	MaxMinAlgorithm maxminAlgo = new MaxMinAlgorithm();
                 	maxminAlgo.runAlgorithm(broker, vmList, cloudletList);
+                	break;
+                case "gwo":
+                	GWOAlgorithm gwoAlgo = new GWOAlgorithm();
+                	gwoAlgo.runAlgorithm(broker, vmList, cloudletList);
+                	break;
+                case "wo":
+                	WhaleOptimizationAlgorithm woAlgo = new WhaleOptimizationAlgorithm();
+                	woAlgo.runAlgorithm(broker, vmList, cloudletList);
+                	break;
+                case "cs":
+                	CuckooSearchAlgorithm csAlgo = new CuckooSearchAlgorithm();
+                	csAlgo.runAlgorithm(broker, vmList, cloudletList);
+                	break;
+                case "ss":
+                	SparrowSearchAlgorithm ssAlgo = new SparrowSearchAlgorithm();
+                	ssAlgo.runAlgorithm(broker, vmList, cloudletList);
+                	break;
+                case "pso":
+                	ParticleSwarmOptimizationAlgorithm psoAlgo = new ParticleSwarmOptimizationAlgorithm();
+                	psoAlgo.runAlgorithm(broker, vmList, cloudletList);
                 	break;
                 default:
                     Log.printLine("Invalid algorithm selection");
@@ -237,60 +244,6 @@ public class CloudSimDemo {
         // so adding min ensures it's within the desired range
         return rand.nextInt((max - min) + 1) + min;
     }
-
-    // Simulate Genetic Algorithm for Scheduling
-    private static List<Integer> runGeneticAlgorithm(int vmCount, int cloudletCount) {
-        List<Integer> schedule = new ArrayList<>();
-        // Random rand = new Random();
-
-        // Randomly assign each Cloudlet to a VM as the initial population
-        for (int i = 0; i < cloudletCount; i++) {
-            schedule.add(getRandomIntInRange(0, vmCount - 1));
-        }
-
-        // Normally you would have fitness functions and selection/crossover/mutation
-        // here,
-        // but this is a simple random scheduler for illustration.
-        return schedule;
-    }
-
-    // Simulate Round Robin Algorithm for Scheduling
-    private static List<Integer> runRoundRobinAlgorithm(int vmCount, int cloudletCount) {
-        List<Integer> schedule = new ArrayList<>();
-
-        for (int i = 0; i < cloudletCount; i++) {
-            schedule.add(i % vmCount);
-        }
-
-        return schedule;
-    }
-
-    // Simulate First Come First Serve Algorithm for Scheduling
-    private static List<Integer> runFirstComeFirstServeAlgorithm(int vmCount, int cloudletCount) {
-        List<Integer> schedule = new ArrayList<>();
-
-        for (int i = 0; i < cloudletCount; i++) {
-            schedule.add(0);
-        }
-
-        return schedule;
-    }
-
-    // Simulate Shortest Job First Algorithm for Scheduling
-    private static List<Integer> runSJFAlgorithm(List<Vm> vmList, List<Cloudlet> cloudletList) {
-        List<Integer> schedule = new ArrayList<>();
-        List<Cloudlet> sortedCloudletList = new ArrayList<>(cloudletList);
-        sortedCloudletList.sort((a, b) -> Long.compare(a.getCloudletLength(), b.getCloudletLength()));
-
-        for (int i = 0; i < cloudletList.size(); i++) {
-            schedule.add(0);
-        }
-
-        return schedule;
-    }
-
-    // Simulate Ant Colony Optimization Algorithm for Scheduling
-
 
     // Print the results of Cloudlets execution
     private static void printCloudletList(List<Cloudlet> list) {
